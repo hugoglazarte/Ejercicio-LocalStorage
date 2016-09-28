@@ -74,11 +74,21 @@ var Diario = (function () {
         var h3 = document.createElement('h3');
         var img = document.createElement('img');
         var p = document.createElement('p');
+        // dibujando el boton borrar-noticia
+        var but = document.createElement('button');
+        var butTxt = document.createTextNode('Borrar Noticia');
 
 		// Se asignan los atributos id y class al elemento li creado anteriormente
 		// El id del li es el id de la noticia. Nos servira para luego, de ser necesario, borrarla
         li.setAttribute('id', noticia.id);
         li.setAttribute('class', 'list-group-item'); // Bootstrap
+
+        //seteo atributos del button
+        but.setAttribute('id','boton-ID-'+noticia.id);
+        but.setAttribute('class', 'btn-borrar btn btn-primary');
+        but.setAttribute('style','display:block;');
+
+        but.appendChild(butTxt);
 
 		// Se agrega el texto al h3 y p a partir del titulo y la descripcion respectivamente
         h3 = agregarTexto(h3, noticia.titulo);
@@ -91,6 +101,7 @@ var Diario = (function () {
         li.appendChild(h3);
         li.appendChild(p);
         li.appendChild(img);
+        li.appendChild(but);
 
 		// Por ultimo se hace append del li en ul
         ul.appendChild(li);
@@ -175,7 +186,19 @@ var Diario = (function () {
         }
 
     }
+
+    // FUNCION BORRAR ///////////
+
+    var borrarPorBoton = function() {
+
+    	var btnBorrar = document.getElementById('boton-ID-0');
+
+    	btnBorrar.onclick = console.log('hiciste click');
+    }
     
+
+    /////////////////////////
+
     var limpiarDiario = function () {
 
 		noticias = [];
@@ -189,6 +212,16 @@ var Diario = (function () {
 		
 	}
 
+	var limpiarPrueba = function () {
+
+		var noticiasDOM = document.getElementById("noticias");
+		
+		while (noticiasDOM.firstChild) {
+			noticiasDOM.removeChild(noticiasDOM.firstChild);
+		}
+
+	}
+
 	
 
 	// EJERCICIO
@@ -196,13 +229,13 @@ var Diario = (function () {
 	var generarNuevoId = function () {
 		debugger;
 		// EJERCICIO
-		var mayorID = 0;
+		var mayorID = -1;
 
 		for(i = 0; i < noticias.length; i++) { 
 
 			if (noticias[i].id > mayorID) { 
                 
-            	mayorID = noticias[i];
+            	mayorID = noticias[i].id;
             }
 
         }
@@ -270,15 +303,80 @@ var Diario = (function () {
 				
 			});
 
+			guardarNoticias();
+			limpiarPrueba();
+			precargarNoticias();
+
+
 		}
 
 		ordenID.onclick = ordenarPorID;
 
 		var ordenNombreAz = document.getElementById("ordenamiento_az");
 
+		function ordenarPorAz() {
+
+			noticias.sort(function (a, b) {
+
+			//ordenando por nombre
+			if (a.titulo > b.titulo) {
+
+		    	return 1;
+		 
+		  	}
+
+		  	if (a.titulo < b.titulo) {
+
+		    	return -1;
+
+		  	}
+
+		  		return 0;
+				
+			});
+
+			guardarNoticias();
+			limpiarPrueba();
+			precargarNoticias();
+
+
+		}
+
+		ordenNombreAz.onclick = ordenarPorAz;
+
+
 		var ordenNombreZa = document.getElementById("ordenamiento_za");
 
-		
+		function ordenarPorZa() {
+
+			noticias.sort(function (a, b) {
+
+			//ordenando por nombre
+			if (a.titulo > b.titulo) {
+
+		    	return -1;
+		 
+		  	}
+
+		  	if (a.titulo < b.titulo) {
+
+		    	return 1;
+
+		  	}
+
+		  		return 0;
+				
+			});
+
+			guardarNoticias();
+			limpiarPrueba();
+			precargarNoticias();
+
+
+		}
+
+		ordenNombreZa.onclick = ordenarPorZa;
+
 
 	}
 
@@ -291,7 +389,11 @@ var Diario = (function () {
 
 		vincularFormulario();
 
+		vincularOrdenamientos();
+
 		precargarNoticias();
+
+		borrarPorBoton();
 
 	}
 
@@ -304,6 +406,7 @@ var Diario = (function () {
         agregarNoticia: agregarNoticia,
         eliminarNoticia: eliminarNoticia,
 		iniciar: iniciar,
+		limpiarPrueba: limpiarPrueba, // borrando de prueba
 		limpiarDiario: limpiarDiario
     };
 
